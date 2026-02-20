@@ -1,9 +1,6 @@
 import os, time, threading, subprocess
 import console_control as console
 
-if not os.path.exists("./compressed"):
-    os.mkdir("./compressed")
-
 def is_float(string: str):
     try:
         float(string)
@@ -97,6 +94,10 @@ def compress_async(
                 "-movflags", "+faststart",
                 os.path.abspath(output_path),
             ]
+            
+            if encoder == "hevc_nvenc":
+                cmd.append("-hwaccel")
+                cmd.append("cuda")
 
             p = subprocess.Popen(
                 cmd,

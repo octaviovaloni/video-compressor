@@ -8,6 +8,10 @@ if not os.path.exists("./bin/ffmpeg.exe") or not os.path.exists("./bin/ffprobe.e
     time.sleep(5)
     exit()
 
+# Creating output folder if necessary
+if not os.path.exists("./compressed"):
+    os.mkdir("./compressed")
+
 init_time = time.time()
 argv = sys.argv
 total_MBs_saved = 0.0
@@ -22,7 +26,6 @@ if len(argv) > 2:
     if os.path.exists(argv[2]):
         output_folder = argv[2]
         
-console.clean_upper_line()
 mp4_files = core.find_mp4_files(search_folder)
 
 console.write("- - - -  VIDEO COMPRESSOR  - - - -")
@@ -73,7 +76,7 @@ for file in mp4_files:
     )
     
     while state["finished"] == False:
-        console.write(f"Compressed Time: {core.hhmmss(state["seconds_processed"])}")
+        console.write(f"Progress: {core.hhmmss(state["seconds_processed"])}")
         time.sleep(0.5)
         console.clean_upper_line()
     
@@ -81,10 +84,7 @@ for file in mp4_files:
     saved_MB = file_size_MB - compressed_file_size_MB
     total_MBs_saved = total_MBs_saved + saved_MB
     
-    console.clean_upper_line()
-    console.clean_upper_line()
-    console.clean_upper_line()
-    console.clean_upper_line()
+    console.clean_upper_lines(6)
     
     console.write(f"File: {os.path.basename(output_file)}")
     console.write(f"Saved MBs: {saved_MB} MBs")
